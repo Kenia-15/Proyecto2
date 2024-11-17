@@ -1,0 +1,20 @@
+﻿@model TblListaProducto
+
+<h1>@TempData["Categoria"]</h1>
+
+<section>
+    <div class="productos">
+        @foreach (var item in ViewBag.Productos)
+        {
+            <article class="tarjeta">
+                <h2>@item.NombreProducto</h2>
+                <p>@item.Descripcion</p>
+                <p>Precio: @item.Precio</p>
+                <p>Color: @item.Color</p>
+                <p>Medida: @item.Medida</p>
+                <p>Disponibles: @item.Stock</p>
+                <a asp-action="" asp-controller="" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto">Agregar al carrito</a>
+            </article>
+        }
+    </div>
+</section>
