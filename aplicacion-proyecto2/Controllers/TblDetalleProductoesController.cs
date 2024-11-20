@@ -31,13 +31,22 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         //Procedimiento encargado de mostrar los productos por categoría
-        public IActionResult Productos(string id, string idC)
+        [Route("api/[controller]")]
+        public IActionResult Productos(string id, int idC, string buscar)
         {
             TempData["Categoria"] = idC;
+
             List<TblListaProducto> productos = new List<TblListaProducto>();
 
             //Se carga la lista de productos
-            productos = DetalleProducto(idC);
+            productos = ListaProductos(idC);
+
+            //Se filtra la lista de productos según el valor que trae el parámetro "buscar" 
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                //Se busca en la lista de productos el producto independientemente de que sea en mayúscula o minúscula
+                productos = productos.Where(p => p.NombreProducto.ToLower().Contains(buscar.ToLower()) || p.NombreProducto.ToUpper().Contains(buscar.ToUpper())).ToList();
+            }
 
             //Se muestra la lista de productos en la vista
             ViewBag.Productos = productos;
@@ -45,21 +54,21 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Productos(TblDetalleProductoesController det, string id, string idC)
+        public IActionResult Productos(TblDetalleProductoesController det, int id, string idC)
         {
             TempData["Categoria"] = idC;
             return View();
         }
 
         //Función que devuelve una lista con los productos por categoría
-        public List<TblListaProducto> DetalleProducto(string idCategoria)
+        public List<TblListaProducto> ListaProductos(int idCategoria)
         {
             //Se declaran objetos del tipo de modelo TblDetalleProducto
             List<TblListaProducto> detProducto = new List<TblListaProducto>();
             TblListaProducto det = new TblListaProducto();
 
             //Se obtienen todos los productos de la categoría ingresada por parámetro
-            var query = "select t.id_detalle_producto, t.stock, p.id_producto, p.nombre_producto, p.descripcion, p.precio, c.color, m.medida from db_carrito.dbo.tbl_productos p, db_carrito.dbo.tbl_detalle_producto t, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_producto = p.id_producto and c.id_color = t.id_color\r\nand m.id_medida = t.id_medida and p.id_categoria = '"+ idCategoria + "';";
+            var query = "select t.id_detalle_producto, t.stock, p.id_producto, p.nombre_producto, p.descripcion, p.precio, c.color, m.medida, t.ruta_imagen from db_carrito.dbo.tbl_productos p, db_carrito.dbo.tbl_detalle_producto t, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_producto = p.id_producto and c.id_color = t.id_color and m.id_medida = t.id_medida and p.id_categoria = '"+ idCategoria + "' and t.stock > 0;";
 
             try
             {
@@ -82,7 +91,8 @@ namespace aplicacion_proyecto2.Controllers
                                     Descripcion = read.GetString(4),
                                     Precio = read.GetDecimal(5),
                                     Color = read.GetString(6),
-                                    Medida = read.GetString(7)
+                                    Medida = read.GetString(7),
+                                    RutaImagen = read.GetString(8)
                                 });
                             }
                         }
@@ -93,29 +103,76 @@ namespace aplicacion_proyecto2.Controllers
             {
                 Console.WriteLine(ex.Message.ToString());
             }
-
+            
             return detProducto;
         }
 
-        // GET: TblDetalleProductoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        //funci{on que devuelve la lista del detalle de los productos
+		public List<TblListaProducto> DetalleProducto(int idDetalle)
+		{
+			//Se declaran objetos del tipo de modelo TblDetalleProducto
+			List<TblListaProducto> detProducto = new List<TblListaProducto>();
+			TblListaProducto det = new TblListaProducto();
+
+			//Se obtienen todos los productos de la categoría ingresada por parámetro
+			var query = "select t.id_detalle_producto, t.stock, p.id_producto, p.nombre_producto, p.descripcion, p.precio, c.color, m.medida, t.ruta_imagen from db_carrito.dbo.tbl_productos p, db_carrito.dbo.tbl_detalle_producto t, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_producto = p.id_producto and c.id_color = t.id_color and m.id_medida = t.id_medida and t.id_detalle_producto = '" + idDetalle + "' and t.stock > 0;";
+
+			try
+			{
+				using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+				{
+					using (SqlCommand com = new SqlCommand(query, sqlConn))
+					{
+						sqlConn.Open();
+
+						using (SqlDataReader read = com.ExecuteReader())
+						{
+							while (read.Read())
+							{
+								detProducto.Add(new TblListaProducto
+								{
+									IdDetalleProducto = read.GetInt32(0),
+									Stock = read.GetInt32(1),
+									IdProducto = read.GetInt32(2),
+									NombreProducto = read.GetString(3),
+									Descripcion = read.GetString(4),
+									Precio = read.GetDecimal(5),
+									Color = read.GetString(6),
+									Medida = read.GetString(7),
+									RutaImagen = read.GetString(8)
+								});
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message.ToString());
+			}
+
+			return detProducto;
+		}
+
+
+		// GET: TblDetalleProductoes/Details/5
+		public IActionResult Details(int idD, int idC)
         {
-            if (id == null || _context.TblDetalleProductos == null)
+            TempData["Categoria"] = idC;
+
+            List<TblListaProducto> productos = new List<TblListaProducto>();
+
+            //Se carga la lista de productos
+            productos = DetalleProducto(idD);
+
+            if (idD == 0 || _context.TblDetalleProductos == null)
             {
                 return NotFound();
             }
 
-            var tblDetalleProducto = await _context.TblDetalleProductos
-                .Include(t => t.IdColorNavigation)
-                .Include(t => t.IdMedidaNavigation)
-                .Include(t => t.IdProductoNavigation)
-                .FirstOrDefaultAsync(m => m.IdDetalleProducto == id);
-            if (tblDetalleProducto == null)
-            {
-                return NotFound();
-            }
-
-            return View(tblDetalleProducto);
+            //Se muestra la lista de productos en la vista
+            ViewBag.Productos = productos;
+            return View();
         }
 
         // GET: TblDetalleProductoes/Create

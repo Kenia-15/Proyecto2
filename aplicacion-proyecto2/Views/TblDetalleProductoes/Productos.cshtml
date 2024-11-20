@@ -3,17 +3,26 @@
 <h1>@TempData["Categoria"]</h1>
 
 <section>
+    <form asp-controller="TblDetalleProductoes" asp-action="Productos" asp-route-id="1" asp-route-idC="@TempData["Categoria"]" class="buscador">
+        <div class="form-group">
+            <label class="control-label">Buscar:</label>
+            <input class="form-text" type="text" name="buscar"/>
+            <input class="btn btn-sm btn-dark" type="submit" value="Buscar"/>
+        </div>
+    </form>
+
     <div class="productos">
         @foreach (var item in ViewBag.Productos)
         {
             <article class="tarjeta">
-                <h2>@item.NombreProducto</h2>
-                <p>@item.Descripcion</p>
-                <p>Precio: @item.Precio</p>
-                <p>Color: @item.Color</p>
-                <p>Medida: @item.Medida</p>
-                <p>Disponibles: @item.Stock</p>
-                <a asp-action="" asp-controller="" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto">Agregar al carrito</a>
+                <div>
+                    <img src="data:image/jpg; base64, @item.RutaImagen" class="card-img-top">
+                    <h2>@item.NombreProducto</h2>
+                    <p>Precio: ₡@item.Precio</p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Details" asp-controller="TblDetalleProductoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto" asp-route-idC="@TempData["Categoria"]">Ver detalle del producto</a>
+                </div>                
             </article>
         }
     </div>

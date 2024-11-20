@@ -38,3 +38,25 @@ body {
      transition: scale(1.02);
      box-shadow: 0 10px 15px rgba(0, 0, 0, .3);
  }
+
+.buscador {
+    padding-bottom: 20px;
+}
+
+.productos img {
+    max-height: 30vh;
+    object-fit: contain;
+}
+
+/*Detalle de productos*/
+#btn-carrito {
+    background-color: aquamarine;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+#btn-carrito a {
+    text-decoration: none;
+    color: black;
+}
