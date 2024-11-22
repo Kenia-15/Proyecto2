@@ -195,7 +195,9 @@ namespace aplicacion_proyecto2.Controllers
             {
                 _context.Add(tblDetalleProducto);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //Ver como se redireccionaba
+                //return RedirectToAction(nameof(Carrito));
             }
             ViewData["IdColor"] = new SelectList(_context.TblColores, "IdColor", "IdColor", tblDetalleProducto.IdColor);
             ViewData["IdMedida"] = new SelectList(_context.TblMedidas, "IdMedida", "IdMedida", tblDetalleProducto.IdMedida);

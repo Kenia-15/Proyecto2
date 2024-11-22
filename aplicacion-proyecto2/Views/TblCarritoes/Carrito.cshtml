@@ -1,0 +1,74 @@
+﻿@model TblListaDetalleCarrito
+
+@{
+    ViewData["Title"] = "Carrito de compras";
+}
+
+<h2>Carrito(@ViewData["CantArticulos"])</h2>
+<br />
+@if (ViewData["ExistenProductos"] == "S")
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                
+                </th>
+                <th>
+                    Nombre Producto
+                </th>
+                <th>
+                    Precio
+                </th>
+                <th>
+                    Color
+                </th>
+                <th>
+                    Medida
+                </th>
+                <th>
+                    Cantidad
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in ViewBag.CarritoLista)
+        {
+            <tr>
+                <td>
+                   <img src="data:image/jpg; base64, @item.RutaImagen" class="card-img-top" style="width:60px;height:60px;">
+                </td>
+                <td class="elemento-lista">
+                    @item.NombreProducto
+                </td>
+                <td class="elemento-lista">
+                    ₡@item.Precio
+                </td>
+                <td class="elemento-lista">
+                    @item.Color
+                </td>
+                <td class="elemento-lista">
+                   @item.Medida
+                </td>
+                 <td class="elemento-lista">
+                   @item.Cantidad
+                </td>
+                <td>
+                   <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="@ViewData["IdUsuario"]">Edit</a> |
+                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="@ViewData["IdUsuario"]">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <h3>Monto Total: ₡@ViewData["MontoCarrito"]</h3>
+}
+else
+{
+    <h2>No existen productos en el carrito</h2>
+}
+		

@@ -60,3 +60,7 @@ body {
     text-decoration: none;
     color: black;
 }
+
+.elemento-lista {
+    padding-top: 25px;
+}

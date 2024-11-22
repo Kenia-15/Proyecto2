@@ -1,12 +1,12 @@
 ﻿@model aplicacion_proyecto2.Models.TblCarrito
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar del carrito";
 }
 
-<h1>Delete</h1>
+<h1>Eliminar del carrito</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Está seguro(a) de que desea eliminar el producto del carrito?</h3>
 <div>
     <h4>TblCarrito</h4>
     <hr />
@@ -33,7 +33,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdCarrito" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

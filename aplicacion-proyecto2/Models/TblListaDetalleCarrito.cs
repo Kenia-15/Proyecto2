@@ -15,6 +15,8 @@
         /// Identificador del producto
         /// </summary>
         public int IdProducto { get; set; }
+
+        public int IdCarrito { get; set; }
         /// <summary>
         /// Medida del producto
         /// </summary>
@@ -41,8 +43,7 @@
 
         public string? RutaImagen { get; set; }
 
-        public int? Cantidad { get; set; }
+        public int Cantidad { get; set; }
 
-        public int? Total { get; set; }
     }
 }

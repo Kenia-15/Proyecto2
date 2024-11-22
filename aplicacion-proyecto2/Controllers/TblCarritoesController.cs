@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aplicacion_proyecto2.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Routing;
 
 namespace aplicacion_proyecto2.Controllers
 {
@@ -13,17 +15,58 @@ namespace aplicacion_proyecto2.Controllers
     {
         private readonly db_carritoContext _context;
 
-        public TblCarritoesController(db_carritoContext context)
+        public TblCarritoesController(db_carritoContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         // GET: TblCarritoes
-        public async Task<IActionResult> Index()
+        public IActionResult Carrito(int id)
         {
-            var db_carritoContext = _context.TblCarritos.Include(t => t.IdDetalleProductoNavigation).Include(t => t.IdUsuarioNavigation);
-            return View(await db_carritoContext.ToListAsync());
+            /*var db_carritoContext = _context.TblCarritos.Include(t => t.IdDetalleProductoNavigation).Include(t => t.IdUsuarioNavigation);
+            return View(await db_carritoContext.ToListAsync());*/
+
+            TempData["idUsuario"] = id;
+
+            List<TblListaDetalleCarrito> carrito = new List<TblListaDetalleCarrito>();
+            decimal montoTotal = 0;
+            decimal montoCantProducto = 0;
+
+            //Se carga la lista de carrito
+            carrito = ListaCarrito(id);
+
+            if (carrito.Count() > 0)
+            {
+                ViewData["ExistenProductos"] = "S";
+                ViewData["CantArticulos"] = carrito.Count();
+
+                foreach (var item in carrito)
+                {
+                    montoCantProducto = item.Cantidad * item.Precio;
+                    montoTotal = montoTotal + montoCantProducto;
+                }
+
+                ViewData["MontoCarrito"] = montoTotal;
+
+               //Se muestra la lista de carrito en la vista
+               ViewBag.CarritoLista = carrito;
+            } else
+            {
+                ViewData["ExistenProductos"] = "N";
+            }            
+            return View();
         }
+
+        [HttpPost]
+        public IActionResult Carrito(int id, TblCarritoesController cr)
+        {
+            TempData["idUsuario"] = id;
+            return View();
+        }
+
 
         // GET: TblCarritoes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -90,27 +133,51 @@ namespace aplicacion_proyecto2.Controllers
         //Función que devuelve una lista con el detalle del carrito
         public List<TblListaDetalleCarrito> ListaCarrito(int id)
         {
+            //Se declaran objetos del tipo de modelo TblListaDetalleCarrito
             List<TblListaDetalleCarrito> detalleCarrito = new List<TblListaDetalleCarrito>();
-            List<TblCarrito> listCarrito = new List<TblCarrito>();
-            TblListaDetalleCarrito carrito;
+            TblListaDetalleCarrito det = new TblListaDetalleCarrito();
 
-            //Se obtiene el carrito por usuario
-            listCarrito = _context.TblCarritos.Where(p => p.IdUsuario == id).ToList();
+            //Se obtienen todos los productos del carrito del cliente
+            var query = "select t.id_detalle_producto, t.stock, p.id_producto, p.nombre_producto, p.descripcion, p.precio, c.color, m.medida, t.ruta_imagen, cr.id_carrito, cr.cantidad from db_carrito.dbo.tbl_productos p, db_carrito.dbo.tbl_detalle_producto t, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m, db_carrito.dbo.tbl_carrito cr where t.id_producto = p.id_producto and c.id_color = t.id_color and m.id_medida = t.id_medida and cr.id_detalle_producto = t.id_detalle_producto and cr.id_usuario = '" + id + "' ;";
 
-            if (listCarrito.Count > 0)
+            try
             {
-                foreach (var item in listCarrito)
+                using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
                 {
-                    carrito = new TblListaDetalleCarrito();
+                    using (SqlCommand com = new SqlCommand(query, sqlConn))
+                    {
+                        sqlConn.Open();
 
-                    carrito.Cantidad = item.Cantidad;
-
-                    carrito.Color = _context.TblColores.FirstOrDefault(p => p.IdColor.Equals(item.IdDetalleProductoNavigation.IdColor)).ToString();
+                        using (SqlDataReader read = com.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                detalleCarrito.Add(new TblListaDetalleCarrito
+                                {
+                                    IdDetalleProducto = read.GetInt32(0),
+                                    Stock = read.GetInt32(1),
+                                    IdProducto = read.GetInt32(2),
+                                    NombreProducto = read.GetString(3),
+                                    Descripcion = read.GetString(4),
+                                    Precio = read.GetDecimal(5),
+                                    Color = read.GetString(6),
+                                    Medida = read.GetString(7),
+                                    RutaImagen = read.GetString(8),
+                                    IdCarrito = read.GetInt32(9),
+                                    Cantidad = read.GetInt32(10)
+                                });
+                            }
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
 
+            //Se calcula el total del carrito
             return detalleCarrito;
-
         }
 
         // GET: TblCarritoes/Edit/5
@@ -169,8 +236,10 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblCarritoes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int idU)
         {
+            ViewData["IdUsuario"] = idU;
+
             if (id == null || _context.TblCarritos == null)
             {
                 return NotFound();
@@ -191,8 +260,10 @@ namespace aplicacion_proyecto2.Controllers
         // POST: TblCarritoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int idU)
         {
+            ViewData["IdUsuario"] = idU;
+
             if (_context.TblCarritos == null)
             {
                 return Problem("Entity set 'db_carritoContext.TblCarritos'  is null.");
@@ -204,7 +275,9 @@ namespace aplicacion_proyecto2.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Carrito));
+
+            //Revisar en el proyecto 1 cómo pase parámetros con el redirect
         }
 
         private bool TblCarritoExists(int id)
