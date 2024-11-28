@@ -303,7 +303,7 @@ namespace aplicacion_proyecto2.Controllers
             ViewData["IdProducto"] = idU;
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Carrito","TblCarritoes", new { idU = idU});
+            return RedirectToAction("Carrito","TblCarritoes", new { id = idU} );
         }
 
         private bool TblDetalleProductoExists(int id)

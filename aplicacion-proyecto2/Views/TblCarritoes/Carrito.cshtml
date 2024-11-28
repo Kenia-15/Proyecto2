@@ -57,15 +57,15 @@
                    @item.Cantidad
                 </td>
                 <td>
-                   <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="@ViewData["IdUsuario"]">Edit</a> |
-                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="1">Delete</a>
+                   <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="1">Editar</a> |
+                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="1">Eliminar</a>
                         <!--@ViewData["IdUsuario"]-->
                 </td>
             </tr>
         }
         </tbody>
     </table>
-
+    <br />
     <h3>Monto Total: ₡@ViewData["MontoCarrito"]</h3>
 }
 else

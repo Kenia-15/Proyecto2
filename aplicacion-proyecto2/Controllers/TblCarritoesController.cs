@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aplicacion_proyecto2.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Routing;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace aplicacion_proyecto2.Controllers
 {
@@ -53,6 +54,7 @@ namespace aplicacion_proyecto2.Controllers
             } else
             {
                 ViewData["ExistenProductos"] = "N";
+                ViewData["CantArticulos"] = 0;
             }            
             return View();
         }
@@ -86,7 +88,7 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblCarritoes/Create
-        public IActionResult Create(string nom, int stk, int idD)
+        public IActionResult Create(string nom, int stk, int idD, int idC)
         {
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto");
             ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario");
@@ -94,6 +96,7 @@ namespace aplicacion_proyecto2.Controllers
             ViewData["NombreProducto"] = nom;
             ViewData["Stock"] = stk;
             ViewData["IdDetalle"] = idD;
+            ViewData["Categoria"] = idC;
 
             return View();
         }
@@ -269,14 +272,65 @@ namespace aplicacion_proyecto2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCarrito,IdUsuario,IdDetalleProducto,Cantidad")] TblCarrito tblCarrito)
+        public async Task<IActionResult> Edit(int id, int idU, [Bind("IdCarrito,IdUsuario,IdDetalleProducto,Cantidad")] TblCarrito tblCarrito)
         {
+            TblDetalleProducto enStock = new TblDetalleProducto();
+            int? cantidadProducto = 0;
+            int? nuevoStock = 0;
+            int? diferencia = 0;
+
+            //Se obtiene la información del carrito
+            try
+            {
+                var query = "select cantidad from db_carrito.dbo.tbl_carrito where id_carrito = '" + id + "';";
+
+                using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                {
+                    using (SqlCommand com = new SqlCommand(query, sqlConn))
+                    {
+                        sqlConn.Open();
+
+                        using (SqlDataReader read = com.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                cantidadProducto = read.GetInt32(0);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = ex;
+            }
+            //carrito = _context.TblCarritos.FirstOrDefault(p => p.IdCarrito.Equals(tblCarrito.IdCarrito));
+
+            //Se obtiene la cantidad de productos en stock
+            enStock = _context.TblDetalleProductos.FirstOrDefault(p => p.IdDetalleProducto.Equals(tblCarrito.IdDetalleProducto));
+
+            //Si la cantidad de productos aumentó
+            if (tblCarrito.Cantidad > cantidadProducto)
+            {
+                //Se calcula la diferencia de la cantidad de productos
+                diferencia = tblCarrito.Cantidad - cantidadProducto;
+
+                nuevoStock = enStock.Stock - diferencia;
+            } //Si la cantidad de productos redujo
+            else if (tblCarrito.Cantidad < cantidadProducto)
+            {
+                //Se calcula la diferencia de la cantidad de productos
+                diferencia = cantidadProducto - tblCarrito.Cantidad;
+
+                nuevoStock = enStock.Stock + diferencia;
+            }
+
             if (id != tblCarrito.IdCarrito)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
                 try
                 {
@@ -294,8 +348,33 @@ namespace aplicacion_proyecto2.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    var queryUpd = "update db_carrito.dbo.tbl_detalle_producto set stock = '" + nuevoStock + "' where id_detalle_producto = '" + tblCarrito.IdDetalleProducto + "';";
+
+                    using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                    {
+                        using (SqlCommand com = new SqlCommand(queryUpd, sqlConn))
+                        {
+                            sqlConn.Open();
+                            com.ExecuteNonQuery();
+                            sqlConn.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewData["Mensaje"] = "Ocurrió un error al intentar editar el producto" + ex.ToString();
+                }
+
+                return RedirectToAction("Carrito", "TblCarritoes", new { id = tblCarrito.IdUsuario });
             }
+            catch (Exception ex)
+            {
+                ViewData["Mensaje"] = "Ocurrió un error al intentar editar el producto" + ex.ToString();
+            }
+
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto", tblCarrito.IdDetalleProducto);
             ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario", tblCarrito.IdUsuario);
             return View(tblCarrito);
@@ -328,7 +407,16 @@ namespace aplicacion_proyecto2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int idU)
         {
+            TblDetalleProducto enStock = new TblDetalleProducto();
+            TblCarrito carrito = new TblCarrito();
             ViewData["IdUsuario"] = idU;
+            int? nuevoStock = 0;
+
+            //Se obtiene la información del carrito
+            carrito = _context.TblCarritos.FirstOrDefault(p => p.IdCarrito.Equals(id));
+
+            //Se obtiene la cantidad de productos en stock
+            enStock = _context.TblDetalleProductos.FirstOrDefault(p => p.IdDetalleProducto.Equals(carrito.IdDetalleProducto));
 
             if (_context.TblCarritos == null)
             {
@@ -341,9 +429,31 @@ namespace aplicacion_proyecto2.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Carrito));
 
-            //Revisar en el proyecto 1 cómo pase parámetros con el redirect
+            //Se procede a actualizar el stock del producto eliminado del carrito
+            nuevoStock = enStock.Stock + carrito.Cantidad;
+
+            try
+            {
+                var queryUpd = "update db_carrito.dbo.tbl_detalle_producto set stock = '" + nuevoStock + "' where id_detalle_producto = '" + carrito.IdDetalleProducto + "';";
+
+                using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                {
+                    using (SqlCommand com = new SqlCommand(queryUpd, sqlConn))
+                    {
+                        sqlConn.Open();
+                        com.ExecuteNonQuery();
+                        sqlConn.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Mensaje"] = "Ocurrió un error al intentar actualizar el stock producto" + ex.ToString();
+            }
+
+            idU = carrito.IdUsuario;
+            return RedirectToAction("Carrito", "TblCarritoes", new { id = idU });
         }
 
         private bool TblCarritoExists(int id)

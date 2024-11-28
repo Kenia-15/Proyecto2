@@ -21,10 +21,12 @@
             <p>Color: @item.Color</p>
             <p>Medida: @item.Medida</p>
             <p>Disponibles: @item.Stock</p>
+
+            <div class="card-footer" id="btn-carrito">
+                <a asp-action="Create" asp-controller="TblCarritoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock">Seleccionar</a>
+            </div>
         </div>
-        <div class="card-footer" id="btn-carrito">
-            <a asp-action="Create" asp-controller="TblCarritoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock">Seleccionar</a>
-        </div>
+        
     }
 </div>
 

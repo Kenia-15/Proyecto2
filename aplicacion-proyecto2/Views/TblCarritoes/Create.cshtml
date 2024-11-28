@@ -4,9 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>TblCarrito</h4>
+<h4>Agregar producto al carrito</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -32,15 +30,12 @@
                 <label asp-for="Cantidad" class="control-label"></label>
                 <input asp-for="Cantidad" class="form-control">
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Añadir al carrito" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
