@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using aplicacion_proyecto2.Models;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.Threading;
 
 namespace aplicacion_proyecto2.Controllers
 {
@@ -286,8 +287,9 @@ namespace aplicacion_proyecto2.Controllers
         // POST: TblDetalleProductoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int idU)
         {
+
             if (_context.TblDetalleProductos == null)
             {
                 return Problem("Entity set 'db_carritoContext.TblDetalleProductos'  is null.");
@@ -297,9 +299,11 @@ namespace aplicacion_proyecto2.Controllers
             {
                 _context.TblDetalleProductos.Remove(tblDetalleProducto);
             }
-            
+
+            ViewData["IdProducto"] = idU;
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Carrito","TblCarritoes", new { idU = idU});
         }
 
         private bool TblDetalleProductoExists(int id)

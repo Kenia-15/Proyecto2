@@ -58,7 +58,8 @@
                 </td>
                 <td>
                    <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="@ViewData["IdUsuario"]">Edit</a> |
-                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="@ViewData["IdUsuario"]">Delete</a>
+                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="1">Delete</a>
+                        <!--@ViewData["IdUsuario"]-->
                 </td>
             </tr>
         }

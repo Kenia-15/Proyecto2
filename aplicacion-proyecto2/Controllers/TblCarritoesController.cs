@@ -26,9 +26,6 @@ namespace aplicacion_proyecto2.Controllers
         // GET: TblCarritoes
         public IActionResult Carrito(int id)
         {
-            /*var db_carritoContext = _context.TblCarritos.Include(t => t.IdDetalleProductoNavigation).Include(t => t.IdUsuarioNavigation);
-            return View(await db_carritoContext.ToListAsync());*/
-
             TempData["idUsuario"] = id;
 
             List<TblListaDetalleCarrito> carrito = new List<TblListaDetalleCarrito>();
@@ -89,10 +86,15 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblCarritoes/Create
-        public IActionResult Create()
+        public IActionResult Create(string nom, int stk, int idD)
         {
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto");
             ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario");
+
+            ViewData["NombreProducto"] = nom;
+            ViewData["Stock"] = stk;
+            ViewData["IdDetalle"] = idD;
+
             return View();
         }
 
@@ -103,26 +105,90 @@ namespace aplicacion_proyecto2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCarrito,IdUsuario,IdDetalleProducto,Cantidad")] TblCarrito tblCarrito)
         {
+
+            TblDetalleProducto enStock = new TblDetalleProducto();
+            TblCarrito carrito = new TblCarrito();
+            int? cantidadNueva = 0;
+            int? nuevoStock = 0;
+
             //Se obtiene la cantidad de productos en stock
+            enStock = _context.TblDetalleProductos.FirstOrDefault(p => p.IdDetalleProducto.Equals(tblCarrito.IdDetalleProducto));
 
             //Se valida si la cantidad de productos seleccionada es congruente con la cantidad de productos en stock
-            
-            try
+            if (enStock.Stock < tblCarrito.Cantidad)
             {
-                //Si el producto ya existe en el carrito, se procede a actualizar la cantidad del producto
-
-                //De lo contrario se agrega el producto al carrito
-                _context.Add(tblCarrito);
-                await _context.SaveChangesAsync();
-
-                //Se procede a actualizar el stock del producto agregado al carrito
-
-
-                return RedirectToAction(nameof(Index));
+                ViewData["Mensaje"] = "La cantidad del producto no puede ser mayor a la cantidad de productos en stock";
             }
-            catch (Exception ex)
+            else
             {
-                TempData["Mensaje"] = "Ocurrió un error al intentar agregar el producto al carrito " + ex.ToString();
+                try
+                {
+                    //Se obtiene la información del carrito
+                    carrito = _context.TblCarritos.FirstOrDefault(p => p.IdDetalleProducto.Equals(tblCarrito.IdDetalleProducto));
+
+                    //Si el producto ya existe en el carrito, se procede a actualizar la cantidad del producto
+                    if (carrito is not null)
+                    {
+                        if (carrito.Cantidad > 0)
+                        {
+                            cantidadNueva = carrito.Cantidad + tblCarrito.Cantidad;
+
+                            var queryUpdate = "update db_carrito.dbo.tbl_carrito set cantidad = '" + cantidadNueva + "' where id_detalle_producto = '" + tblCarrito.IdDetalleProducto + "';";
+
+                            try
+                            {
+                                using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                                {
+                                    using (SqlCommand com = new SqlCommand(queryUpdate, sqlConn))
+                                    {
+                                        sqlConn.Open();
+                                        com.ExecuteNonQuery();
+                                        sqlConn.Close();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ViewData["Mensaje"] = "Ocurrió un error al intentar actualizar el producto" + ex.ToString();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //De lo contrario se agrega el producto al carrito
+                        _context.Add(tblCarrito);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    //Se procede a actualizar el stock del producto agregado al carrito
+                    nuevoStock = enStock.Stock - tblCarrito.Cantidad;
+
+                    try
+                    {
+                        var queryUpd = "update db_carrito.dbo.tbl_detalle_producto set stock = '" + nuevoStock + "' where id_detalle_producto = '" + tblCarrito.IdDetalleProducto + "';";
+
+                        using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                        {
+                            using (SqlCommand com = new SqlCommand(queryUpd, sqlConn))
+                            {
+                                sqlConn.Open();
+                                com.ExecuteNonQuery();
+                                sqlConn.Close();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewData["Mensaje"] = "Ocurrió un error al intentar actualizar el stock producto" + ex.ToString();
+                    }
+
+
+                    return RedirectToAction("Carrito", "TblCarritoes", new { id = tblCarrito.IdUsuario });
+                }
+                catch (Exception ex)
+                {
+                    TempData["Mensaje"] = "Ocurrió un error al intentar agregar el producto al carrito " + ex.ToString();
+                }
             }
 
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto", tblCarrito.IdDetalleProducto);

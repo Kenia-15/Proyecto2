@@ -16,14 +16,14 @@
         </div>
         <div class="float-end">
             <h2>@item.NombreProducto</h2>
-            <p>Descripción:@item.Descripcion</p>
+            <p>Descripción: @item.Descripcion</p>
             <p>Precio: ₡@item.Precio</p>
             <p>Color: @item.Color</p>
             <p>Medida: @item.Medida</p>
             <p>Disponibles: @item.Stock</p>
         </div>
         <div class="card-footer" id="btn-carrito">
-           <a asp-action="Create" asp-controller="TblCarritoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto">Seleccionar</a>
+            <a asp-action="Create" asp-controller="TblCarritoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock">Seleccionar</a>
         </div>
     }
 </div>
