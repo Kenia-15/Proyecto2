@@ -67,9 +67,11 @@
     </table>
     <br />
     <h3>Monto Total: ₡@ViewData["MontoCarrito"]</h3>
+    <br>
+    <a asp-action="Create" asp-controller="TblDetallePedidoes">Proceder al pago</a>
 }
 else
 {
     <h2>No existen productos en el carrito</h2>
 }
-		
+
