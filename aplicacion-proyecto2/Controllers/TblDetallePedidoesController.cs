@@ -12,10 +12,12 @@ namespace aplicacion_proyecto2.Controllers
     public class TblDetallePedidoesController : Controller
     {
         private readonly db_carritoContext _context;
+        public IConfiguration Configuration { get; }
 
-        public TblDetallePedidoesController(db_carritoContext context)
+        public TblDetallePedidoesController(db_carritoContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
 
         // GET: TblDetallePedidoes
@@ -50,9 +52,10 @@ namespace aplicacion_proyecto2.Controllers
         {
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto");
             ViewData["IdPedido"] = new SelectList(_context.TblPedidos, "IdPedido", "IdPedido");
-            ViewData["Provincia"] = new SelectList(_context.TblProvincias, "IdProvincia", "Provincia");
+
             return View();
         }
+
 
         // POST: TblDetallePedidoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

@@ -4,14 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
+<input type="text" value="@TempData["Usuario"]" />
+
 <h1>Categorías</h1>
+<br />
 
 <section>
     <div class="categorias">
         @foreach (var item in Model) {
         <article class="tarjeta">
                 <h4>@Html.DisplayFor(modelItem => item.Categoria)</h4>
-                <a asp-action="Productos" asp-controller="TblDetalleProductoes" asp-route-id="1" asp-route-idC="@item.IdCategoria">Ver productos</a>
+                <a asp-action="Productos" asp-controller="TblDetalleProductoes" asp-route-idU="@TempData["Usuario"]" asp-route-idC="@item.IdCategoria">Ver productos</a>
         </article>
         }
     </div>

@@ -18,10 +18,7 @@ namespace aplicacion_proyecto2.Models
         /// Identificador del usuario que realiza el pedido
         /// </summary>
         public int IdUsuario { get; set; }
-        /// <summary>
-        /// Identificador del distrito donde se realiza el pedido
-        /// </summary>
-        public int IdDistrito { get; set; }
+
         /// <summary>
         /// Monto total del pedido
         /// </summary>
@@ -39,7 +36,6 @@ namespace aplicacion_proyecto2.Models
         /// </summary>
         public DateTime? Fecha { get; set; }
 
-        public virtual TblDistrito IdDistritoNavigation { get; set; } = null!;
         public virtual TblUsuario IdUsuarioNavigation { get; set; } = null!;
         public virtual ICollection<TblDetallePedido> TblDetallePedidos { get; set; }
     }

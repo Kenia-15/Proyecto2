@@ -247,3 +247,10 @@ C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplica
 C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.Mvc.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.Razor.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.Helpers.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.WebPages.Deployment.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.WebPages.Razor.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\System.Web.WebPages.dll
+C:\MIS-DATOS\CARRERA\UNED\III-CUATRI-2024\Proyecto 2\aplicacion-proyecto2\aplicacion-proyecto2\bin\Debug\net6.0\Microsoft.Web.Infrastructure.dll

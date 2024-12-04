@@ -1,9 +1,11 @@
 ﻿@model TblListaProducto
 
+<input type="text" value="@TempData["Usuario"]" />
+
 <h1>@TempData["Categoria"]</h1>
 
 <section>
-    <form asp-controller="TblDetalleProductoes" asp-action="Productos" asp-route-id="1" asp-route-idC="@TempData["Categoria"]" class="buscador">
+    <form asp-controller="TblDetalleProductoes" asp-action="Productos" asp-route-idU="@TempData["Usuario"]" asp-route-idC="@TempData["Categoria"]" class="buscador">
         <div class="form-group">
             <label class="control-label">Buscar:</label>
             <input class="form-text" type="text" name="buscar"/>
@@ -21,7 +23,7 @@
                     <p>Precio: ₡@item.Precio</p>
                 </div>
                 <div class="card-footer">
-                    <a asp-action="Details" asp-controller="TblDetalleProductoes" asp-route-id="1" asp-route-idD="@item.IdDetalleProducto" asp-route-idC="@TempData["Categoria"]">Ver detalle del producto</a>
+                    <a asp-action="Details" asp-controller="TblDetalleProductoes" asp-route-idU="@TempData["Usuario"]" asp-route-idD="@item.IdDetalleProducto" asp-route-idC="@TempData["Categoria"]">Ver detalle del producto</a>
                 </div>                
             </article>
         }

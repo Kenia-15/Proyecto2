@@ -1,0 +1,37 @@
+﻿@model aplicacion_proyecto2.Models.IniciarSesion
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+
+<div class="container">
+    <h1 class="display-4 text-center" style="margin-top:2em">Iniciar Sesión</h1>
+    <div class="col-md-4" style="margin-left:20em;margin-top:2em">
+            <form method="post" class="form-floating">
+                <div class="form-group">
+                    <label asp-for="email" class="control-label">Email</label>
+                    <input asp-for="email" type="email" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="contrasena" class="control-label">Contraseña</label>
+                    <input asp-for="contrasena" type="password" class="form-control" />
+                </div>
+            <br />
+                <div class="form-group">
+                <input type="submit" asp-action="IniciarSesion" value="Iniciar Sesión" />
+                </div>
+            </form>
+            <br />
+            <li class="nav-item">
+                ¿No tienes una cuenta? <a asp-area="" asp-controller="Registro" asp-action="Registrar">Registrarse</a>
+            </li>
+        </div>   
+</div>

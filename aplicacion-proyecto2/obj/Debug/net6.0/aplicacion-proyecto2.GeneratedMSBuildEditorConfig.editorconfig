@@ -24,6 +24,34 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/IniciarSesion/IniciarSesion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5pY2lhclNlc2lvblxJbmljaWFyU2VzaW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Personas/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uYXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Personas/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uYXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Personas/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uYXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Personas/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uYXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Personas/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uYXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Registro/Registrar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0cm9cUmVnaXN0cmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -114,6 +142,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblDetalleProductoes/Productos.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsRGV0YWxsZVByb2R1Y3RvZXNcUHJvZHVjdG9zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblPedidoes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsUGVkaWRvZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblPedidoes/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsUGVkaWRvZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblPedidoes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsUGVkaWRvZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblPedidoes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsUGVkaWRvZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/TblPedidoes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGJsUGVkaWRvZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/MIS-DATOS/CARRERA/UNED/III-CUATRI-2024/Proyecto 2/aplicacion-proyecto2/aplicacion-proyecto2/Views/_ViewImports.cshtml]

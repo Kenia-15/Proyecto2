@@ -16,20 +16,17 @@ namespace aplicacion_proyecto2.Models
         {
         }
 
-        public virtual DbSet<TblCantone> TblCantones { get; set; } = null!;
         public virtual DbSet<TblCarrito> TblCarritos { get; set; } = null!;
         public virtual DbSet<TblCategoria> TblCategorias { get; set; } = null!;
         public virtual DbSet<TblColore> TblColores { get; set; } = null!;
         public virtual DbSet<TblDetallePedido> TblDetallePedidos { get; set; } = null!;
         public virtual DbSet<TblDetalleProducto> TblDetalleProductos { get; set; } = null!;
-        public virtual DbSet<TblDistrito> TblDistritos { get; set; } = null!;
         public virtual DbSet<TblMedida> TblMedidas { get; set; } = null!;
         public virtual DbSet<TblMetodosPago> TblMetodosPagos { get; set; } = null!;
         public virtual DbSet<TblPedido> TblPedidos { get; set; } = null!;
         public virtual DbSet<TblPersona> TblPersonas { get; set; } = null!;
         public virtual DbSet<TblProducto> TblProductos { get; set; } = null!;
         public virtual DbSet<TblPromocione> TblPromociones { get; set; } = null!;
-        public virtual DbSet<TblProvincia> TblProvincias { get; set; } = null!;
         public virtual DbSet<TblUsuario> TblUsuarios { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -43,34 +40,6 @@ namespace aplicacion_proyecto2.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TblCantone>(entity =>
-            {
-                entity.HasKey(e => e.IdCanton)
-                    .HasName("PK__tbl_cant__339BEA572959E503");
-
-                entity.ToTable("tbl_cantones");
-
-                entity.Property(e => e.IdCanton)
-                    .HasColumnName("id_canton")
-                    .HasComment("Identificador del canton");
-
-                entity.Property(e => e.Canton)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("canton")
-                    .HasComment("Nombre del canton");
-
-                entity.Property(e => e.IdProvincia)
-                    .HasColumnName("id_provincia")
-                    .HasComment("Identificador de la provincia");
-
-                entity.HasOne(d => d.IdProvinciaNavigation)
-                    .WithMany(p => p.TblCantones)
-                    .HasForeignKey(d => d.IdProvincia)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__tbl_canto__id_pr__73BA3083");
-            });
-
             modelBuilder.Entity<TblCarrito>(entity =>
             {
                 entity.HasKey(e => e.IdCarrito)
@@ -250,44 +219,6 @@ namespace aplicacion_proyecto2.Models
                     .HasConstraintName("FK__tbl_detal__id_pr__7A672E12");
             });
 
-            modelBuilder.Entity<TblDistrito>(entity =>
-            {
-                entity.HasKey(e => e.IdDistrito)
-                    .HasName("PK__tbl_dist__65E5575D51D45D29");
-
-                entity.ToTable("tbl_distritos");
-
-                entity.Property(e => e.IdDistrito)
-                    .HasColumnName("id_distrito")
-                    .HasComment("Identificador del distrito");
-
-                entity.Property(e => e.Distrito)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("distrito")
-                    .HasComment("Nombre del distrito");
-
-                entity.Property(e => e.IdCanton)
-                    .HasColumnName("id_canton")
-                    .HasComment("Identificador del canton");
-
-                entity.Property(e => e.IdProvincia)
-                    .HasColumnName("id_provincia")
-                    .HasComment("Identificador de la provincia");
-
-                entity.HasOne(d => d.IdCantonNavigation)
-                    .WithMany(p => p.TblDistritos)
-                    .HasForeignKey(d => d.IdCanton)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__tbl_distr__id_ca__778AC167");
-
-                entity.HasOne(d => d.IdProvinciaNavigation)
-                    .WithMany(p => p.TblDistritos)
-                    .HasForeignKey(d => d.IdProvincia)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__tbl_distr__id_pr__76969D2E");
-            });
-
             modelBuilder.Entity<TblMedida>(entity =>
             {
                 entity.HasKey(e => e.IdMedida)
@@ -353,10 +284,6 @@ namespace aplicacion_proyecto2.Models
                     .HasColumnName("fecha")
                     .HasComment("Fecha en que se realiza el pedido");
 
-                entity.Property(e => e.IdDistrito)
-                    .HasColumnName("id_distrito")
-                    .HasComment("Identificador del distrito donde se realiza el pedido");
-
                 entity.Property(e => e.IdUsuario)
                     .HasColumnName("id_usuario")
                     .HasComment("Identificador del usuario que realiza el pedido");
@@ -369,12 +296,6 @@ namespace aplicacion_proyecto2.Models
                 entity.Property(e => e.Telefono)
                     .HasColumnName("telefono")
                     .HasComment("Telefono del usuario que realiza el pedido");
-
-                entity.HasOne(d => d.IdDistritoNavigation)
-                    .WithMany(p => p.TblPedidos)
-                    .HasForeignKey(d => d.IdDistrito)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__tbl_pedid__id_di__05D8E0BE");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.TblPedidos)
@@ -512,24 +433,6 @@ namespace aplicacion_proyecto2.Models
                     .HasForeignKey(d => d.IdProducto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__tbl_promo__id_pr__0F624AF8");
-            });
-
-            modelBuilder.Entity<TblProvincia>(entity =>
-            {
-                entity.HasKey(e => e.IdProvincia)
-                    .HasName("PK__tbl_prov__66C18BFDB07DAB41");
-
-                entity.ToTable("tbl_provincias");
-
-                entity.Property(e => e.IdProvincia)
-                    .HasColumnName("id_provincia")
-                    .HasComment("Identificador de la provincia");
-
-                entity.Property(e => e.Provincia)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("provincia")
-                    .HasComment("Nombre de la provincia");
             });
 
             modelBuilder.Entity<TblUsuario>(entity =>

@@ -9,6 +9,7 @@ using aplicacion_proyecto2.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Routing;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace aplicacion_proyecto2.Controllers
 {
@@ -27,7 +28,8 @@ namespace aplicacion_proyecto2.Controllers
         // GET: TblCarritoes
         public IActionResult Carrito(int id)
         {
-            TempData["idUsuario"] = id;
+            TempData["Usuario"] = id;
+            TempData["Header"] = "S";
 
             List<TblListaDetalleCarrito> carrito = new List<TblListaDetalleCarrito>();
             decimal montoTotal = 0;
@@ -62,7 +64,8 @@ namespace aplicacion_proyecto2.Controllers
         [HttpPost]
         public IActionResult Carrito(int id, TblCarritoesController cr)
         {
-            TempData["idUsuario"] = id;
+            TempData["Usuario"] = id;
+            TempData["Header"] = "S";
             return View();
         }
 
@@ -88,7 +91,7 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblCarritoes/Create
-        public IActionResult Create(string nom, int stk, int idD, int idC)
+        public IActionResult Create(int idU, string nom, int stk, int idD, int idC)
         {
             ViewData["IdDetalleProducto"] = new SelectList(_context.TblDetalleProductos, "IdDetalleProducto", "IdDetalleProducto");
             ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario");
@@ -97,6 +100,8 @@ namespace aplicacion_proyecto2.Controllers
             ViewData["Stock"] = stk;
             ViewData["IdDetalle"] = idD;
             ViewData["Categoria"] = idC;
+
+            TempData["Usuario"] = idU;
 
             return View();
         }
@@ -110,7 +115,8 @@ namespace aplicacion_proyecto2.Controllers
         {
 
             TblDetalleProducto enStock = new TblDetalleProducto();
-            TblCarrito carrito = new TblCarrito();
+            //TblCarrito carrito = new TblCarrito();
+            List<TblCarrito> carrito = new List<TblCarrito>();
             int? cantidadNueva = 0;
             int? nuevoStock = 0;
 
@@ -127,16 +133,23 @@ namespace aplicacion_proyecto2.Controllers
                 try
                 {
                     //Se obtiene la información del carrito
-                    carrito = _context.TblCarritos.FirstOrDefault(p => p.IdDetalleProducto.Equals(tblCarrito.IdDetalleProducto));
+                    carrito = (from p in _context.TblCarritos where p.IdUsuario == tblCarrito.IdUsuario && p.IdDetalleProducto == tblCarrito.IdDetalleProducto
+                                select new TblCarrito
+                    {
+                        IdCarrito = p.IdCarrito,
+                        IdUsuario = p.IdUsuario,
+                        IdDetalleProducto = p.IdDetalleProducto,
+                        Cantidad = p.Cantidad
+                    }).ToList();
 
                     //Si el producto ya existe en el carrito, se procede a actualizar la cantidad del producto
-                    if (carrito is not null)
+                    if (carrito.Count > 0)
                     {
-                        if (carrito.Cantidad > 0)
+                        if (carrito[0].Cantidad > 0)
                         {
-                            cantidadNueva = carrito.Cantidad + tblCarrito.Cantidad;
+                            cantidadNueva = carrito[0].Cantidad + tblCarrito.Cantidad;
 
-                            var queryUpdate = "update db_carrito.dbo.tbl_carrito set cantidad = '" + cantidadNueva + "' where id_detalle_producto = '" + tblCarrito.IdDetalleProducto + "';";
+                            var queryUpdate = "update db_carrito.dbo.tbl_carrito set cantidad = '" + cantidadNueva + "' where id_detalle_producto = '" + tblCarrito.IdDetalleProducto + "' and id_usuario = '" + tblCarrito.IdUsuario + "';";
 
                             try
                             {
@@ -185,7 +198,7 @@ namespace aplicacion_proyecto2.Controllers
                         ViewData["Mensaje"] = "Ocurrió un error al intentar actualizar el stock producto" + ex.ToString();
                     }
 
-
+                    TempData["Usuario"] = tblCarrito.IdUsuario;
                     return RedirectToAction("Carrito", "TblCarritoes", new { id = tblCarrito.IdUsuario });
                 }
                 catch (Exception ex)
@@ -278,6 +291,8 @@ namespace aplicacion_proyecto2.Controllers
             int? cantidadProducto = 0;
             int? nuevoStock = 0;
             int? diferencia = 0;
+
+            TempData["Usuario"] = idU;
 
             //Se obtiene la información del carrito
             try

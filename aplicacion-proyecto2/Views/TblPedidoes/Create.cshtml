@@ -1,0 +1,45 @@
+﻿@model aplicacion_proyecto2.Models.TblPedido
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>TblPedido</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdUsuario" class="control-label"></label>
+                <input asp-for="IdUsuario" class="form-control" value="@TempData["Usuario"]" />
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label">Teléfono</label>
+                <input type="text" asp-for="Telefono" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label">Dirección</label>
+                <textarea asp-for="Direccion" class="form-control"></textarea>
+            </div>            
+            <div class="form-group">
+                <label asp-for="MontoTotal" class="control-label">Monto Total</label>
+                <input disabled asp-for="MontoTotal" value="@ViewData["MontoCarrito"]" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

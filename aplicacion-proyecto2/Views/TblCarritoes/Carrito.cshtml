@@ -4,6 +4,8 @@
     ViewData["Title"] = "Carrito de compras";
 }
 
+<input type="hidden" value="@TempData["Usuario"]" />
+
 <h2>Carrito(@ViewData["CantArticulos"])</h2>
 <br />
 @if (ViewData["ExistenProductos"] == "S")
@@ -57,9 +59,8 @@
                    @item.Cantidad
                 </td>
                 <td>
-                   <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="1">Editar</a> |
-                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="1">Eliminar</a>
-                        <!--@ViewData["IdUsuario"]-->
+                   <a asp-action="Edit" asp-route-id="@item.IdCarrito" asp-route-idU="@TempData["Usuario"]">Editar</a> |
+                   <a asp-action="Delete" asp-route-id="@item.IdCarrito" asp-route-idU="@TempData["Usuario"]">Eliminar</a>
                 </td>
             </tr>
         }
@@ -68,7 +69,8 @@
     <br />
     <h3>Monto Total: ₡@ViewData["MontoCarrito"]</h3>
     <br>
-    <a asp-action="Create" asp-controller="TblDetallePedidoes">Proceder al pago</a>
+    <a asp-action="Create" asp-controller="TblPedidoes" asp-route-idU="@TempData["Usuario"]" asp-route-idM="@ViewData["MontoCarrito"]">Generar Pedido</a>
+
 }
 else
 {

@@ -1,0 +1,45 @@
+﻿@model aplicacion_proyecto2.Models.TblPersona
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Perfil</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdPersona" />
+            <div class="form-group">
+                <label asp-for="IdMetodoPago" class="control-label">Método de Pago</label>
+                <select asp-for="IdMetodoPago" class="form-control" asp-items="ViewBag.MetodosPago"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroIdentificacion" class="control-label">Número de Identificación</label>
+                <input asp-for="NumeroIdentificacion" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PrimerNombre" class="control-label">Primer Nombre</label>
+                <input asp-for="PrimerNombre" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SegundoNombre" class="control-label">Segundo Nombre</label>
+                <input asp-for="SegundoNombre" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PrimerApellido" class="control-label">Primer Apellido</label>
+                <input asp-for="PrimerApellido" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SegundoApellido" class="control-label">Segundo Apellido</label>
+                <input asp-for="SegundoApellido" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar" />
+            </div>
+        </form>
+    </div>
+</div>
+

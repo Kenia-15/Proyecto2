@@ -33,9 +33,10 @@ namespace aplicacion_proyecto2.Controllers
 
         //Procedimiento encargado de mostrar los productos por categoría
         [Route("api/[controller]")]
-        public IActionResult Productos(string id, int idC, string buscar)
+        public IActionResult Productos(string idU, int idC, string buscar)
         {
             TempData["Categoria"] = idC;
+            TempData["Usuario"] = idU;
 
             List<TblListaProducto> productos = new List<TblListaProducto>();
 
@@ -55,9 +56,10 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Productos(TblDetalleProductoesController det, int id, string idC)
+        public IActionResult Productos(TblDetalleProductoesController det, int idU, string idC)
         {
             TempData["Categoria"] = idC;
+            TempData["Usuario"] = idU;
             return View();
         }
 
@@ -157,9 +159,10 @@ namespace aplicacion_proyecto2.Controllers
 
 
 		// GET: TblDetalleProductoes/Details/5
-		public IActionResult Details(int idD, int idC)
+		public IActionResult Details(int idD, int idC, int idU)
         {
             TempData["Categoria"] = idC;
+            TempData["Usuario"] = idU;
 
             List<TblListaProducto> productos = new List<TblListaProducto>();
 
@@ -300,7 +303,8 @@ namespace aplicacion_proyecto2.Controllers
                 _context.TblDetalleProductos.Remove(tblDetalleProducto);
             }
 
-            ViewData["IdProducto"] = idU;
+            //ViewData["IdProducto"] = idU;
+            ViewData["Usuario"] = idU;
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Carrito","TblCarritoes", new { id = idU} );
