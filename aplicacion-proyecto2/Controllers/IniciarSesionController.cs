@@ -22,21 +22,21 @@ namespace aplicacion_proyecto2.Controllers
             _context = context;
         }
 
-        public IActionResult IniciarSesion()
+        public IActionResult IniciarSesion(int idU)
         {
-            //TempData["Usuario"] = null;
+            TempData["Usuario"] = idU;
             TempData["Header"] = "N";
             return View();
         }
 
 
         [HttpPost]
-        public IActionResult IniciarSesion(IniciarSesion usuario)
+        public IActionResult IniciarSesion(IniciarSesion usuario, int idU)
         {
             var validaUsuario = 0;
             var query = "";
             TempData["Header"] = "N";
-            //TempData["Usuario"] = null;
+            TempData["Usuario"] = idU;
 
             if (usuario.email == null || usuario.contrasena == null)
             {
@@ -96,7 +96,7 @@ namespace aplicacion_proyecto2.Controllers
                 return View();
             } else
             {
-                return RedirectToAction("Index", "TblCategorias");
+                return RedirectToAction("Index", "TblCategorias", new { idU = idU });
             }            
         }
 

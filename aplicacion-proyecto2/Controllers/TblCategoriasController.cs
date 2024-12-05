@@ -19,11 +19,11 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblCategorias
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int idU)
         {
-              return _context.TblCategorias != null ? 
-                          View(await _context.TblCategorias.ToListAsync()) :
-                          Problem("Entity set 'db_carritoContext.TblCategorias'  is null.");
+            return _context.TblCategorias != null ? 
+            View(await _context.TblCategorias.ToListAsync()) :
+            Problem("Entity set 'db_carritoContext.TblCategorias'  is null.");
         }
 
         // GET: TblCategorias/Details/5

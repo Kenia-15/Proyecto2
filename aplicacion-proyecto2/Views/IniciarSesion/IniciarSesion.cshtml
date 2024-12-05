@@ -10,6 +10,7 @@
         @TempData["Mensaje"]
     </div>
 }
+<input type="hidden" value="@TempData["Usuario"]" />
 
 
 <div class="container">
@@ -26,7 +27,7 @@
                 </div>
             <br />
                 <div class="form-group">
-                <input type="submit" asp-action="IniciarSesion" value="Iniciar Sesión" />
+                <input type="submit" asp-action="IniciarSesion" asp-route-idU="@TempData["Usuario"]" value="Iniciar Sesión" />
                 </div>
             </form>
             <br />

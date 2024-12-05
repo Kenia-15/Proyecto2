@@ -115,7 +115,6 @@ namespace aplicacion_proyecto2.Controllers
         {
 
             TblDetalleProducto enStock = new TblDetalleProducto();
-            //TblCarrito carrito = new TblCarrito();
             List<TblCarrito> carrito = new List<TblCarrito>();
             int? cantidadNueva = 0;
             int? nuevoStock = 0;

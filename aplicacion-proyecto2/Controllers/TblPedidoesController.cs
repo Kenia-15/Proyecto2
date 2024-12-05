@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using aplicacion_proyecto2.Models;
 using System.Runtime.Intrinsics.Arm;
+using Microsoft.Data.SqlClient;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace aplicacion_proyecto2.Controllers
 {
@@ -14,9 +16,12 @@ namespace aplicacion_proyecto2.Controllers
     {
         private readonly db_carritoContext _context;
 
-        public TblPedidoesController(db_carritoContext context)
+        public IConfiguration Configuration { get; }
+
+        public TblPedidoesController(db_carritoContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration = configuration;
         }
 
         // GET: TblPedidoes
@@ -60,31 +65,117 @@ namespace aplicacion_proyecto2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPedido,IdUsuario,MontoTotal,Telefono,Direccion,Fecha")] TblPedido tblPedido)
-        {
-            
+        {            
             DateTime fechaActual = DateTime.Parse(DateTime.Today.ToShortDateString());
-            TblCarrito listaCarrito = new TblCarrito();
-            TblDetallePedido detalle = new TblDetallePedido();
+            TblDetalleProducto detalle = new TblDetalleProducto();
+            List<TblCarrito> listaCarrito = new List<TblCarrito>();
+            TblProducto producto = new TblProducto();
 
-            //se crea el id del registro
+            //--
+            var query = "";
+            var secuenciaIdPedido = 0;
+            var secuenciaIdDetPedido = 0;
+            var countPedido = _context.TblPedidos.Count();
+            var countDetPedido = _context.TblDetallePedidos.Count();
 
             try
             {
+                //Se realiza el autoincremento del pedido
+                if (countPedido == 0)
+                {
+                    secuenciaIdPedido = 1;
+                }
+                else
+                {
+                    secuenciaIdPedido = _context.TblPedidos.Max(p => Convert.ToInt32(p.IdPedido));
+                    secuenciaIdPedido += 1;
+                }
+
+                //Se realiza el autoincremento del detalle del pedido
+                if (countDetPedido == 0)
+                {
+                    secuenciaIdDetPedido = 1;
+                }
+                else
+                {
+                    secuenciaIdDetPedido = _context.TblDetallePedidos.Max(p => Convert.ToInt32(p.IdDetallePedido));
+                    secuenciaIdDetPedido += 1;
+                }
+
                 //Se inserta la información en la tabla de pedidos
+                tblPedido.IdPedido = secuenciaIdPedido;
                 tblPedido.Fecha = fechaActual;
                 _context.Add(tblPedido);
 
-                //Se inserta la información en la tabla de detalle de pedidos
-
-                _context.Add(detalle);
-
                 await _context.SaveChangesAsync();
 
-                //Se elimina la información de la tabla carrito si se actualizó correctamente la de detalle de pedidos
-                
+                try
+                {
+                    //Se obtiene la información del carrito
+                    listaCarrito = (from p in _context.TblCarritos
+                               where p.IdUsuario == tblPedido.IdUsuario
+                               select new TblCarrito
+                               {
+                                   IdCarrito = p.IdCarrito,
+                                   IdUsuario = p.IdUsuario,
+                                   IdDetalleProducto = p.IdDetalleProducto,
+                                   Cantidad = p.Cantidad
+                               }).ToList();
 
-                
-                return RedirectToAction(nameof(Index));
+                    //Se recorre la lista                    
+                    foreach(TblCarrito i in listaCarrito)
+                    {
+                        detalle = _context.TblDetalleProductos.FirstOrDefault(p => p.IdDetalleProducto == i.IdDetalleProducto);
+                        //Se busca el precio del producto
+                        producto = _context.TblProductos.FirstOrDefault(p => p.IdProducto == detalle.IdProducto);
+                        
+                        //Se calcula el monto del producto según la cantidad elegida
+                        int? montoProducto = Convert.ToInt32(producto.Precio) * i.Cantidad;
+
+                        //Se inserta la información en la tabla de detalle de pedidos
+                        query = "insert into db_carrito.dbo.tbl_detalle_pedido(id_detalle_pedido,id_pedido,id_detalle_producto,cantidad,total_pedido) values('" + secuenciaIdDetPedido + "', '" + secuenciaIdPedido + "', '" + i.IdDetalleProducto + "', '" + i.Cantidad + "', '" + montoProducto + "');";
+
+
+                        using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                        {
+                            using (SqlCommand com = new SqlCommand(query, sqlConn))
+                            {
+                                sqlConn.Open();
+                                com.ExecuteNonQuery();
+                                sqlConn.Close();
+                            }
+                        }
+
+                        montoProducto = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["Mensaje"] = ex.ToString();
+                }                
+
+                //Se elimina la información de la tabla carrito si se actualizó correctamente la de detalle de pedidos
+                try
+                {
+                    var queryDelete = "delete db_carrito.dbo.tbl_carrito where id_usuario = '" + tblPedido.IdUsuario + "';";
+
+                    using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                    {
+                        using (SqlCommand com = new SqlCommand(queryDelete, sqlConn))
+                        {
+                            sqlConn.Open();
+                            com.ExecuteNonQuery();
+                            sqlConn.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["Mensaje"] = ex.ToString();
+                }
+
+                TempData["Usuario"] = tblPedido.IdUsuario;
+                return RedirectToAction("Carrito", "TblCarritoes", new { idU = tblPedido.IdUsuario });
             }
             catch (Exception e) {
                 TempData["Mensaje"] = "Ocurrió un error al intentar realizar la reserva" + e.ToString();
