@@ -2,13 +2,13 @@
 
 @{
     ViewData["Title"] = "Index";
+    TempData.Keep("Usuario");
 }
 
-<h1>Index</h1>
+<h1>Historial de Pedidos</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<input type="hidden" value="@TempData["Usuario"]" />
+
 <table class="table">
     <thead>
         <tr>
@@ -23,9 +23,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuarioNavigation)
             </th>
             <th></th>
         </tr>
@@ -46,12 +43,8 @@
                 @Html.DisplayFor(modelItem => item.Fecha)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.IdUsuario)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPedido">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdPedido">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPedido">Delete</a>
+                <a asp-action="Pedidos" asp-route-id="@TempData["Usuario"]" asp-route-idP="@item.IdPedido">Detalle del Pedido</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdPedido">Eliminar Pedido</a>
             </td>
         </tr>
 }

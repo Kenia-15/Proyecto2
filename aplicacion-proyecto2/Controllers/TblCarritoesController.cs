@@ -257,7 +257,6 @@ namespace aplicacion_proyecto2.Controllers
                 Console.WriteLine(ex.Message.ToString());
             }
 
-            //Se calcula el total del carrito
             return detalleCarrito;
         }
 

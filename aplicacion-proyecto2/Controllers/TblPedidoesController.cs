@@ -31,7 +31,76 @@ namespace aplicacion_proyecto2.Controllers
             return View(await db_carritoContext.ToListAsync());
         }
 
-        // GET: TblPedidoes/Details/5
+        public IActionResult Pedidos(int id, int idP)
+        {
+            TempData["Usuario"] = id;
+            TempData["Header"] = "S";
+
+            List<TblListaDetallePedido> pedido = new List<TblListaDetallePedido>();
+
+            //Se carga la lista del pedido
+            pedido = ListaPedidos(id, idP);
+
+            //Se muestra la lista del pedido en la vista
+             ViewBag.ListaPedidos = pedido;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Pedidos(int id, int idP, TblPedidoesController cr)
+        {
+            TempData["Usuario"] = id;
+            TempData["Header"] = "S";
+            return View();
+        }
+
+        //Función que devuelve una lista con el detalle del pedido
+        public List<TblListaDetallePedido> ListaPedidos(int id, int idP)
+        {
+            //Se declaran objetos del tipo de modelo TblListaDetallePedido
+            List<TblListaDetallePedido> detallePedido = new List<TblListaDetallePedido>();
+
+            //Se obtienen todos los productos del pedido del cliente
+            var query = "select t.id_detalle_pedido, t.id_pedido, t.id_detalle_producto, t.cantidad, d.nombre_producto, d.precio, c.color, m.medida from db_carrito.dbo.tbl_detalle_pedido t, db_carrito.dbo.tbl_pedidos p, db_carrito.dbo.tbl_productos d, db_carrito.dbo.tbl_detalle_producto e, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_pedido = p.id_pedido and t.id_detalle_producto = e.id_detalle_producto and e.id_producto = d.id_producto and c.id_color = e.id_color and m.id_medida = e.id_medida and p.id_pedido = '" + idP + "' and p.id_usuario = '" + id + "';";
+
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(Configuration["ConnectionStrings:conexion"]))
+                {
+                    using (SqlCommand com = new SqlCommand(query, sqlConn))
+                    {
+                        sqlConn.Open();
+
+                        using (SqlDataReader read = com.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                detallePedido.Add(new TblListaDetallePedido
+                                {
+                                    IdDetallePedido = read.GetInt32(0),
+                                    IdPedido = read.GetInt32(1),
+                                    IdDetalleProducto = read.GetInt32(2),                                    
+                                    IdUsuario = read.GetInt32(3),
+                                    Cantidad = read.GetInt32(4),
+                                    NombreProducto = read.GetString(5),                                    
+                                    Precio = read.GetDecimal(6),
+                                    Color = read.GetString(7),
+                                    Medida = read.GetString(8)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+
+            return detallePedido;
+        }
+
+            // GET: TblPedidoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.TblPedidos == null)

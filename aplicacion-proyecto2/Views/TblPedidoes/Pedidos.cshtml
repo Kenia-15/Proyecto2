@@ -1,0 +1,53 @@
+﻿@model TblListaDetallePedido
+
+@{
+    ViewData["Title"] = "Detalle del Pedido";
+    TempData.Keep("Usuario");
+}
+
+<input type="hidden" value="@TempData["Usuario"]" />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nombre Producto
+            </th>
+            <th>
+                Precio
+            </th>
+            <th>
+                Color
+            </th>
+            <th>
+                Medida
+            </th>
+            <th>
+                Cantidad
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.ListaPedidos)
+        {
+            <tr>
+                <td class="elemento-lista">
+                    @item.NombreProducto
+                </td>
+                <td class="elemento-lista">
+                    ₡@item.Precio
+                </td>
+                <td class="elemento-lista">
+                    @item.Color
+                </td>
+                <td class="elemento-lista">
+                    @item.Medida
+                </td>
+                <td class="elemento-lista">
+                    @item.Cantidad
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />

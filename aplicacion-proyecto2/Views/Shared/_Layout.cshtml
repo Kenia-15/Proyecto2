@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="~/aplicacion_proyecto2.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <input type="hidden" value="@TempData["Usuario"]" />
     <input type="hidden" value="@TempData["Persona"]" />
+    <input type="hidden" value="@TempData["Usuario"]" />
 
     @if (TempData["Header"] != "N")
     {
@@ -28,6 +28,12 @@
                             <a class="nav-link text-dark" asp-controller="Personas" asp-action="Edit" asp-route-id="@TempData["Persona"]">Editar Perfil</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="TblCategorias" asp-action="Index">Categorías</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="TblPedidoes" asp-action="Index" asp-route-id="@TempData["Usuario"]">Historial de Pedidos</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="TblCarritoes" asp-action="Carrito" asp-route-id="@TempData["Usuario"]">Carrito de compras</a>
                         </li>
                     </ul>
@@ -36,6 +42,7 @@
         </nav>
     </header>
     }
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Carrito de compras";
+    TempData.Keep("Usuario");
 }
 
 <input type="hidden" value="@TempData["Usuario"]" />

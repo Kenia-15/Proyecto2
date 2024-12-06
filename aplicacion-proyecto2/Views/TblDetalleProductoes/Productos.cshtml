@@ -1,5 +1,9 @@
 ﻿@model TblListaProducto
 
+@{
+    TempData.Keep("Usuario");
+}
+
 <input type="text" value="@TempData["Usuario"]" />
 
 <h1>@TempData["Categoria"]</h1>
