@@ -302,6 +302,13 @@ namespace aplicacion_proyecto2.Models
                     .HasForeignKey(d => d.IdUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__tbl_pedid__id_us__04E4BC85");
+
+                entity.Property(e => e.Estado)
+                   .HasMaxLength(1)
+                   .IsUnicode(false)
+                   .HasColumnName("estado")
+                   .HasDefaultValueSql("('A')")
+                   .HasComment("Estao del pedido. Posibles valores: A:Activa, I:Inactiva");
             });
 
             modelBuilder.Entity<TblPersona>(entity =>

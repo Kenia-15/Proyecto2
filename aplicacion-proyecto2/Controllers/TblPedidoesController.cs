@@ -27,7 +27,7 @@ namespace aplicacion_proyecto2.Controllers
         // GET: TblPedidoes
         public async Task<IActionResult> Index(int id)
         {
-            var db_carritoContext = _context.TblPedidos.Include(t => t.IdUsuarioNavigation).Where(p => p.IdUsuario == id);
+            var db_carritoContext = _context.TblPedidos.Include(t => t.IdUsuarioNavigation).Where(p => p.IdUsuario == id && p.Estado == "A");
             return View(await db_carritoContext.ToListAsync());
             
         }
@@ -297,20 +297,11 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblPedidoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id, int idU)
         {
-            if (id == null || _context.TblPedidos == null)
-            {
-                return NotFound();
-            }
-
-            var tblPedido = await _context.TblPedidos.FindAsync(id);
-            if (tblPedido == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario", tblPedido.IdUsuario);
-            return View(tblPedido);
+            TempData["Usuario"] = idU;
+            ViewData["idReserva"] = id;
+            return View();
         }
 
         // POST: TblPedidoes/Edit/5
@@ -318,35 +309,29 @@ namespace aplicacion_proyecto2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdPedido,IdUsuario,MontoTotal,Telefono,Direccion,Fecha")] TblPedido tblPedido)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != tblPedido.IdPedido)
-            {
-                return NotFound();
-            }
+            TblPedido pedido = new TblPedido();
+            pedido = _context.TblPedidos.FirstOrDefault(p => p.IdPedido == id);
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(tblPedido);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TblPedidoExists(tblPedido.IdPedido))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                pedido.Estado = "I";
+
+                _context.Update(pedido);
+                await _context.SaveChangesAsync();
+
+                TempData["Usuario"] = pedido.IdUsuario;
+
+                return RedirectToAction("Index", "TblPedidoes", new { id = pedido.IdUsuario });
             }
-            ViewData["IdUsuario"] = new SelectList(_context.TblUsuarios, "IdUsuario", "IdUsuario", tblPedido.IdUsuario);
-            return View(tblPedido);
+            catch (Exception ex)
+            {
+                TempData["Usuario"] = pedido.IdUsuario;
+                ViewData["idReserva"] = id;
+                ViewData["Error"] = "Ha ocurrido un error cancelando el pedido. Error: " + ex;
+                return View();
+            }
         }
 
         // GET: TblPedidoes/Delete/5

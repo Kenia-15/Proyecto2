@@ -4,9 +4,8 @@
     TempData.Keep("Usuario");
 }
 
-<input type="text" value="@TempData["Usuario"]" />
-
-<h1>@TempData["Categoria"]</h1>
+<input type="hidden" value="@TempData["Usuario"]" />
+<input type="hidden" value="@TempData["Categoria"]" />
 
 <section>
     <form asp-controller="TblDetalleProductoes" asp-action="Productos" asp-route-idU="@TempData["Usuario"]" asp-route-idC="@TempData["Categoria"]" class="buscador">

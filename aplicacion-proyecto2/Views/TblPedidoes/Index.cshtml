@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                Código de rastreo
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.MontoTotal)
             </th>
             <th>
@@ -34,9 +31,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-               @Html.DisplayFor(modelItem => item.IdPedido)
-            </td>
-            <td>
                ₡@Html.DisplayFor(modelItem => item.MontoTotal)
             </td>
             <td>
@@ -50,7 +44,7 @@
             </td>
             <td>
                 <a asp-action="Pedidos" asp-route-id="@TempData["Usuario"]" asp-route-idP="@item.IdPedido">Detalle del Pedido</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPedido">Eliminar Pedido</a>
+                <a asp-action="Edit" asp-route-id="@item.IdPedido" asp-route-idU="@TempData["Usuario"]">Eliminar Pedido</a>
             </td>
         </tr>
 }

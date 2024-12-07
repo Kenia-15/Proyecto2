@@ -1,13 +1,13 @@
 ﻿@model TblListaProducto
 
-<h1>@TempData["Categoria"]</h1>
+<input type="hidden" value="@TempData["Categoria"]"/>
 
 @{
     ViewData["Title"] = "Detalle producto";
     TempData.Keep("Usuario");
 }
 
-<input type="text" value="@TempData["Usuario"]" />
+<input type="hidden" value="@TempData["Usuario"]" />
 
 <div class="productos">
     @foreach (var item in ViewBag.Productos)
@@ -25,14 +25,14 @@
             <p>Medida: @item.Medida</p>
             <p>Disponibles: @item.Stock</p>
 
-            <div class="card-footer" id="btn-carrito">
+            <div class="card-footer">
                 <a asp-action="Create" asp-controller="TblCarritoes" asp-route-idU="@TempData["Usuario"]" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock" class="btn btn-dark">Seleccionar</a>
             </div>
         </div>
         
     }
 </div>
-
+<br />
 <div>
     <a asp-action="Productos" asp-route-idC="@TempData["Categoria"]" asp-route-idU="@TempData["Usuario"]">Regresar</a>
 </div>

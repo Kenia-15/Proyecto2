@@ -36,6 +36,8 @@ namespace aplicacion_proyecto2.Models
         /// </summary>
         public DateTime? Fecha { get; set; }
 
+        public string Estado { get; set; }
+
         public virtual TblUsuario IdUsuarioNavigation { get; set; } = null!;
         public virtual ICollection<TblDetallePedido> TblDetallePedidos { get; set; }
     }

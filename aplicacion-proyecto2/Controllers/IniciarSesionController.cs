@@ -82,15 +82,11 @@ namespace aplicacion_proyecto2.Controllers
             {
                 //Se obtiene el identificador del usuario para pasarlo al controlador PaginaPrincipalController
                 var idUsuario = (from i in _context.TblUsuarios where i.Email == usuario.email && i.Contrasena == usuario.contrasena select i.IdUsuario);
-                
+
                 TempData["Usuario"] = idUsuario.FirstOrDefault();
             }
 
-            var idPersona = (from i in _context.TblUsuarios where i.Email == usuario.email && i.Contrasena == usuario.contrasena select i.IdPersona);
-
-            TempData["Persona"] = idPersona.FirstOrDefault();
-
-            if (TempData["Usuario"] == null)
+            if (validaUsuario == 0)
             {
                 TempData["Mensaje"] = "Debe ingresar un usuario y contraseña";
                 return View();

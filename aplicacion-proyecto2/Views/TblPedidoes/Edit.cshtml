@@ -4,50 +4,27 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>TblPedido</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdPedido" />
-            <div class="form-group">
-                <label asp-for="IdUsuario" class="control-label"></label>
-                <select asp-for="IdUsuario" class="form-control" asp-items="ViewBag.IdUsuario"></select>
-                <span asp-validation-for="IdUsuario" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MontoTotal" class="control-label"></label>
-                <input asp-for="MontoTotal" class="form-control" />
-                <span asp-validation-for="MontoTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" class="form-control" />
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
     </div>
-</div>
+}
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<h1>Cancelar Pedido</h1>
+<hr />
+
+ <form method="post" class="form-floating">
+    <div>
+        <h2>¿Está seguro(a) que desea cancelar el pedido?</h2>
+    </div>
+    <br />
+    <br />
+    <div class="form-group">
+        <input type="submit" asp-route-id="@ViewData["idReserva"]" value="Cancelar pedido" class="btn btn-danger" />
+    </div>
+
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

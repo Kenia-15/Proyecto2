@@ -18,7 +18,7 @@ body {
     
 }
 
-ul {
+li {
     list-style: none;
 }
 
@@ -67,4 +67,13 @@ ul {
 
 .elemento-lista {
     padding-top: 25px;
+}
+
+.nav-item svg {
+    color: black;
+    font-size: 15em;
+}
+
+#btn-iniciar, #bt-registro {
+    width: 100%;
 }

@@ -71,19 +71,24 @@ namespace aplicacion_proyecto.Controllers
         // GET: Personas/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.TblPersonas == null)
+            TblUsuario per = new TblUsuario();
+
+            per = _context.TblUsuarios.FirstOrDefault(p => p.IdUsuario == id);
+
+            if (per.IdPersona == null || _context.TblPersonas == null)
             {
                 return NotFound();
             }
 
-            var tblPersona = await _context.TblPersonas.FindAsync(id);
+            var tblPersona = await _context.TblPersonas.FindAsync(per.IdPersona);
             if (tblPersona == null)
             {
                 return NotFound();
             }
             ViewData["MetodosPago"] = new SelectList(_context.TblMetodosPagos, "IdMetodoPago", "MetodoPago", tblPersona.IdMetodoPago);
 
-            @TempData["Usuario"] = tblPersona.IdPersona;
+            TempData["Usuario"] = id;
+
             return View(tblPersona);
         }
 
@@ -94,7 +99,11 @@ namespace aplicacion_proyecto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPersona,IdMetodoPago,NumeroIdentificacion,PrimerNombre,SegundoNombre,PrimerApellido,SegundoApellido")] TblPersona tblPersona)
         {
-            if (id != tblPersona.IdPersona)
+            TblUsuario per = new TblUsuario();
+
+            per = _context.TblUsuarios.FirstOrDefault(p => p.IdUsuario == id);
+
+            if (per.IdPersona != tblPersona.IdPersona)
             {
                 return NotFound();
             }
@@ -118,9 +127,9 @@ namespace aplicacion_proyecto.Controllers
             //return RedirectToAction(nameof(Index));
             ViewData["MetodosPago"] = new SelectList(_context.TblMetodosPagos, "IdMetodoPago", "MetodoPago", tblPersona.IdMetodoPago);
 
-            @TempData["Usuario"] = tblPersona.IdPersona;
+            TempData["Usuario"] = id;
 
-            return View(tblPersona);
+            return RedirectToAction("Index", "TblCategorias", new { idU = id });
         }
 
         // GET: Personas/Delete/5
