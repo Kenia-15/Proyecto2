@@ -70,8 +70,7 @@
     <br />
     <h3>Monto Total: ₡@ViewData["MontoCarrito"]</h3>
     <br>
-    <a asp-action="Create" asp-controller="TblPedidoes" asp-route-idU="@TempData["Usuario"]" asp-route-idM="@ViewData["MontoCarrito"]">Generar Pedido</a>
-
+    <a class="btn btn-dark" asp-action="Create" asp-controller="TblPedidoes" asp-route-idU="@TempData["Usuario"]" asp-route-idM="@ViewData["MontoCarrito"]">Generar Pedido</a>
 }
 else
 {

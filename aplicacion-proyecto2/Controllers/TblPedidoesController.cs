@@ -25,10 +25,11 @@ namespace aplicacion_proyecto2.Controllers
         }
 
         // GET: TblPedidoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            var db_carritoContext = _context.TblPedidos.Include(t => t.IdUsuarioNavigation);
+            var db_carritoContext = _context.TblPedidos.Include(t => t.IdUsuarioNavigation).Where(p => p.IdUsuario == id);
             return View(await db_carritoContext.ToListAsync());
+            
         }
 
         public IActionResult Pedidos(int id, int idP)
@@ -41,8 +42,17 @@ namespace aplicacion_proyecto2.Controllers
             //Se carga la lista del pedido
             pedido = ListaPedidos(id, idP);
 
-            //Se muestra la lista del pedido en la vista
-             ViewBag.ListaPedidos = pedido;
+            if (pedido.Count() > 0)
+            {
+                ViewData["ExistenPedidos"] = "S";
+                //Se muestra la lista del pedido en la vista
+                ViewBag.ListaPedidos = pedido;
+            }
+            else
+            {
+                ViewData["ExistenPedidos"] = "N";
+            }
+            
             return View();
         }
 
@@ -61,7 +71,7 @@ namespace aplicacion_proyecto2.Controllers
             List<TblListaDetallePedido> detallePedido = new List<TblListaDetallePedido>();
 
             //Se obtienen todos los productos del pedido del cliente
-            var query = "select t.id_detalle_pedido, t.id_pedido, t.id_detalle_producto, t.cantidad, d.nombre_producto, d.precio, c.color, m.medida from db_carrito.dbo.tbl_detalle_pedido t, db_carrito.dbo.tbl_pedidos p, db_carrito.dbo.tbl_productos d, db_carrito.dbo.tbl_detalle_producto e, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_pedido = p.id_pedido and t.id_detalle_producto = e.id_detalle_producto and e.id_producto = d.id_producto and c.id_color = e.id_color and m.id_medida = e.id_medida and p.id_pedido = '" + idP + "' and p.id_usuario = '" + id + "';";
+            var query = "select t.id_detalle_pedido, t.id_pedido, t.id_detalle_producto, p.id_usuario, t.cantidad, d.nombre_producto, d.precio, c.color, m.medida from db_carrito.dbo.tbl_detalle_pedido t, db_carrito.dbo.tbl_pedidos p, db_carrito.dbo.tbl_productos d, db_carrito.dbo.tbl_detalle_producto e, db_carrito.dbo.tbl_colores c, db_carrito.dbo.tbl_medidas m where t.id_pedido = p.id_pedido and t.id_detalle_producto = e.id_detalle_producto and e.id_producto = d.id_producto and c.id_color = e.id_color and m.id_medida = e.id_medida and p.id_pedido = '" + idP + "' and p.id_usuario = '" + id + "';";
 
             try
             {
@@ -79,7 +89,7 @@ namespace aplicacion_proyecto2.Controllers
                                 {
                                     IdDetallePedido = read.GetInt32(0),
                                     IdPedido = read.GetInt32(1),
-                                    IdDetalleProducto = read.GetInt32(2),                                    
+                                    IdDetalleProducto = read.GetInt32(2),                                   
                                     IdUsuario = read.GetInt32(3),
                                     Cantidad = read.GetInt32(4),
                                     NombreProducto = read.GetString(5),                                    
@@ -244,7 +254,7 @@ namespace aplicacion_proyecto2.Controllers
                 }
 
                 TempData["Usuario"] = tblPedido.IdUsuario;
-                return RedirectToAction("Carrito", "TblCarritoes", new { idU = tblPedido.IdUsuario });
+                return RedirectToAction("Factura", "TblPedidoes", new { id = tblPedido.IdUsuario, idP = secuenciaIdPedido });
             }
             catch (Exception e) {
                 TempData["Mensaje"] = "Ocurrió un error al intentar realizar la reserva" + e.ToString();
@@ -252,6 +262,38 @@ namespace aplicacion_proyecto2.Controllers
                 TempData["Usuario"] = tblPedido.IdUsuario;
                 return View(tblPedido);
             }
+        }
+
+        //Función que genera la factura
+        public IActionResult Factura(int id, int idP)
+        {
+            TempData["Usuario"] = id;
+            List<TblListaFactura> lista = new
+                List<TblListaFactura>();
+
+            lista = ListaFactura(id, idP);
+
+            ViewBag.ListaFactura = lista;
+            return View();
+        }
+
+        public List<TblListaFactura> ListaFactura(int id, int idP)
+        {
+            List<TblListaFactura> factura = new List<TblListaFactura>();
+
+            TblListaFactura lista = new TblListaFactura();
+
+            lista.pedido = _context.TblPedidos.FirstOrDefault(p => p.IdPedido == idP);
+
+            lista.detalle = ListaPedidos(id, idP);
+
+            lista.usuario = _context.TblUsuarios.FirstOrDefault(p => p.IdUsuario == id);
+
+            lista.persona = _context.TblPersonas.FirstOrDefault(p => p.IdPersona == lista.usuario.IdPersona);
+
+            factura.Add(lista);
+
+            return factura;
         }
 
         // GET: TblPedidoes/Edit/5

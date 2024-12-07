@@ -1,0 +1,71 @@
+﻿@model TblListaFactura
+
+@{
+    TempData.Keep("Usuario");
+}
+
+<br />
+@foreach (var item in ViewBag.ListaFactura)
+{
+    <h3>Tienda Virtual</h3>
+    <div class="form-group">
+        <label for="fecha" class="control-label">Fecha:</label>
+        <p disabled id="fecha">@item.pedido.Fecha</p>
+    </div>
+    <br />
+    <hr />
+    <div class="form-group">
+        <label for="nombre" class="control-label">Nombre:</label>
+        <p disabled id="nombre">@item.persona.PrimerNombre @item.persona.SegundoNombre @item.persona.PrimerApellido @item.persona.SegundoApellido</p>
+    </div>
+    <div class="form-group">
+        <label for="telefono" class="control-label">Teléfono:</label>
+        <p disabled id="telefono">@item.pedido.Telefono</p>
+    </div>
+    <div class="form-group">
+        <label for="direccion" class="control-label">Dirección</label>
+        <p disabled id="direccion">@item.pedido.Direccion</p>
+    </div>
+    <br />
+    <hr />
+    <h2>Productos</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nombre Producto
+                </th>
+                <th>
+                    Cantidad
+                </th>
+                <th>
+                    Precio
+                </th>                
+            </tr>
+        </thead>
+        <hr />
+        <tbody>
+        @foreach (var i in item.detalle)
+            {
+                <tr>
+                    <td class="elemento-lista">
+                        @i.NombreProducto
+                    </td>
+                    <td class="elemento-lista">
+                        @i.Cantidad
+                    </td>
+                    <td class="elemento-lista">
+                        ₡@i.Precio
+                    </td>                    
+                </tr>
+            }
+            </tbody>
+        </table>
+    <br>
+    <hr />
+    <h2>Total a pagar</h2>
+    <div class="form-group">
+        <h2 disabled id="monto">₡@item.pedido.MontoTotal</h2>
+    </div>
+    <a class="btn btn-dark" asp-action="Index" asp-controller="TblCategorias" asp-route-idU="@TempData["Usuario"]">Regresar</a>
+}

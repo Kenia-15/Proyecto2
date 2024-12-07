@@ -34,6 +34,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdCarrito" />
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-        <a asp-route-id="1" asp-action="Carrito">Regresar</a>
+        <a asp-route-id="@TempData["Usuario"]" asp-action="Carrito">Regresar</a>
     </form>
 </div>

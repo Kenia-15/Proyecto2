@@ -14,7 +14,12 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    
+}
+
+ul {
+    list-style: none;
 }
 
 .categorias, .productos {
@@ -50,9 +55,7 @@ body {
 
 /*Detalle de productos*/
 #btn-carrito {
-    background-color: aquamarine;
     padding: 10px;
-    border-radius: 20px;
     text-align: center;
     width: 7em;
 }

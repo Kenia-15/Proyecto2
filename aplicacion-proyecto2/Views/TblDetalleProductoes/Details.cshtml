@@ -26,7 +26,7 @@
             <p>Disponibles: @item.Stock</p>
 
             <div class="card-footer" id="btn-carrito">
-                <a asp-action="Create" asp-controller="TblCarritoes" asp-route-idU="@TempData["Usuario"]" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock">Seleccionar</a>
+                <a asp-action="Create" asp-controller="TblCarritoes" asp-route-idU="@TempData["Usuario"]" asp-route-idD="@item.IdDetalleProducto" asp-route-nom="@item.NombreProducto" asp-route-stk="@item.Stock" class="btn btn-dark">Seleccionar</a>
             </div>
         </div>
         

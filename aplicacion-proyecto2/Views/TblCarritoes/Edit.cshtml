@@ -25,14 +25,14 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Actualizar" class="btn btn-primary" />
+                <input type="submit" value="Actualizar" class="btn btn-dark" />
             </div>
         </form>
     </div>
 </div>
 <br />
 <div>
-    <a asp-route-id="1" asp-action="Carrito">Regresar</a>
+    <a asp-route-id="@TempData["Usuario"]" asp-action="Carrito">Regresar</a>
 </div>
 
 @section Scripts {

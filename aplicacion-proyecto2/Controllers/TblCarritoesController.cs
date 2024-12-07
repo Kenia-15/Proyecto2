@@ -57,7 +57,8 @@ namespace aplicacion_proyecto2.Controllers
             {
                 ViewData["ExistenProductos"] = "N";
                 ViewData["CantArticulos"] = 0;
-            }            
+            }      
+            
             return View();
         }
 

@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                Código de rastreo
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MontoTotal)
             </th>
             <th>
@@ -31,7 +34,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MontoTotal)
+               @Html.DisplayFor(modelItem => item.IdPedido)
+            </td>
+            <td>
+               ₡@Html.DisplayFor(modelItem => item.MontoTotal)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Telefono)

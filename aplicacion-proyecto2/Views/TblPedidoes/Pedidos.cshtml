@@ -6,7 +6,8 @@
 }
 
 <input type="hidden" value="@TempData["Usuario"]" />
-
+@if (ViewData["ExistenPedidos"] == "S")
+{
 <table class="table">
     <thead>
         <tr>
@@ -29,25 +30,30 @@
     </thead>
     <tbody>
         @foreach (var item in ViewBag.ListaPedidos)
-        {
-            <tr>
-                <td class="elemento-lista">
-                    @item.NombreProducto
-                </td>
-                <td class="elemento-lista">
-                    ₡@item.Precio
-                </td>
-                <td class="elemento-lista">
-                    @item.Color
-                </td>
-                <td class="elemento-lista">
-                    @item.Medida
-                </td>
-                <td class="elemento-lista">
-                    @item.Cantidad
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            {
+                <tr>
+                    <td class="elemento-lista">
+                        @item.NombreProducto
+                    </td>
+                    <td class="elemento-lista">
+                        ₡@item.Precio
+                    </td>
+                    <td class="elemento-lista">
+                        @item.Color
+                    </td>
+                    <td class="elemento-lista">
+                        @item.Medida
+                    </td>
+                    <td class="elemento-lista">
+                        @item.Cantidad
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h2>No existen pedidos realizados</h2>
+}
 <br />

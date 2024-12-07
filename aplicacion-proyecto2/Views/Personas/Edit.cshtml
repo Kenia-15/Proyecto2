@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit";
+    TempData.Keep("Usuario");
+    TempData.Keep("Persona");
 }
 
 <h4>Perfil</h4>
@@ -37,7 +39,7 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Guardar" />
+                <input type="submit" class="btn btn-dark" value="Guardar" />
             </div>
         </form>
     </div>
